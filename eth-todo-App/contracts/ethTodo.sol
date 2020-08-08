@@ -1,5 +1,4 @@
-pragma solidity ^0.5.0;
-
+pragma solidity ^0.6.0;
 contract ethTodo {
   struct Task {
     string content; // task content
@@ -12,9 +11,7 @@ contract ethTodo {
   uint[] idOfTasks; // array of id of all tasks
   event addedTask(uint, string, uint, bool); // event to create task
   address private owner;
-  
-
-  constructor todo(uint, address) public{
+  constructor (uint, address) public{
     taskCount = 0;
     owner = msg.sender;
   }
@@ -31,38 +28,28 @@ contract ethTodo {
     require(msg.sender == owner);
     _;
   }
-
   // function to add new task
-  function addNewTask(string memory _taskContent ) onlyOwner() public {
-    taskCount++;// increment taskCount
-    taskList[taskCount] = Task(taskCount, _taskContent, now, false);
+  function addNewTask(string memory _taskContent) onlyOwner() public {
+     //added an incremental value for your task id here
+    uint _id=taskCount++;// increment taskCount
+    taskList[_id] = Task(_taskContent,false,_id, now);
     idOfTasks.push(taskCount);// push id of task created into list of all Ids
     emit addedTask(taskCount, _taskContent, now, false); // fire event to create task
-    
-
   }
-
   //function to view new task
   function viewTask ( uint taskId) taskCheck(taskId) public view  returns(uint, string memory, uint, bool){
     // if task exist
     return (taskId, taskList[taskId].content, taskList[taskId].date,taskList[taskId].completed);
   }
-
   //function to get id of task
   function taskIdList() public view returns(uint[] memory){
     return idOfTasks; // returns id of all task
   }
 }
-
-
 /*  constructor() public {
     newTask("your List of task goes here");
   }
-
   function newTask(string memory _taskContent) public {
     taskList[taskNo] = task(taskNo, _taskContent, false);
-
-
-
     taskNo++; // increase taskNo upon adding new task
   } */
